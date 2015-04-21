@@ -6,12 +6,17 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 
-@SuppressWarnings("serial")
+@SuppressWarnings({ "serial", "unused" })
 public class Main extends JFrame {
 
 	private JPanel contentPane;
 	private final JButton btnNewButton_1 = new JButton("|<<");
 	private final JButton btnNewButton_2 = new JButton(">>|");
+	private final JButton btnNewButton_3 = new JButton("||");
+	private final JButton btnNewButton_4 = new JButton("Shuffle");
+	
+	private boolean playing = false;
+	private boolean shuffle = false;
 
 	/**
 	 * Launch the application.
@@ -44,14 +49,19 @@ public class Main extends JFrame {
 		JButton btnNewButton = new JButton("Play");
 		btnNewButton.setBounds(180, 13, 75, 25);
 		contentPane.add(btnNewButton);
-		btnNewButton_1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-			}
-		});
 		btnNewButton_1.setBounds(93, 13, 75, 25);
 		contentPane.add(btnNewButton_1);
 		btnNewButton_2.setBounds(267, 13, 75, 25);
 		contentPane.add(btnNewButton_2);
+		btnNewButton_3.setBounds(180, 51, 75, 25);
+		contentPane.add(btnNewButton_3);
+		btnNewButton_4.setBounds(56, 51, 112, 25);
+		contentPane.add(btnNewButton_4);
+		
+		JTextPane textPane = new JTextPane();
+		textPane.setEditable(false);
+		textPane.setBounds(12, 96, 408, 90);
+		contentPane.add(textPane);
 
 	}
 }
