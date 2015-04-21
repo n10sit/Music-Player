@@ -58,10 +58,24 @@ public class Main extends JFrame {
 		btnNewButton_4.setBounds(56, 51, 112, 25);
 		contentPane.add(btnNewButton_4);
 		
+		JSpinner spinner = new JSpinner();
+		spinner.setModel(new SpinnerNumberModel(0, 0, 100, 1));
+		spinner.setBounds(319, 51, 42, 22);
+		contentPane.add(spinner);
+		
 		JTextPane textPane = new JTextPane();
 		textPane.setEditable(false);
 		textPane.setBounds(12, 96, 408, 90);
 		contentPane.add(textPane);
+		
+		JLabel lblVolume = new JLabel("Volume:");
+		lblVolume.setBounds(267, 51, 75, 25);
+		contentPane.add(lblVolume);
+		
+		JProgressBar progressBar = new JProgressBar();
+		progressBar.setStringPainted(true);
+		progressBar.setBounds(12, 199, 408, 25);
+		contentPane.add(progressBar);
 
 	}
 }
