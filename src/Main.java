@@ -2,6 +2,8 @@ import java.awt.*;
 
 import javax.swing.*;
 import javax.swing.border.*;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 
 @SuppressWarnings("serial")
@@ -40,11 +42,15 @@ public class Main extends JFrame {
 		contentPane.setLayout(null);
 		
 		JButton btnNewButton = new JButton("Play");
-		btnNewButton.setBounds(190, 25, 55, 25);
+		btnNewButton.setBounds(180, 13, 75, 25);
 		contentPane.add(btnNewButton);
-		btnNewButton_1.setBounds(100, 25, 75, 25);
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
+		btnNewButton_1.setBounds(93, 13, 75, 25);
 		contentPane.add(btnNewButton_1);
-		btnNewButton_2.setBounds(257, 25, 75, 25);
+		btnNewButton_2.setBounds(267, 13, 75, 25);
 		contentPane.add(btnNewButton_2);
 
 	}
