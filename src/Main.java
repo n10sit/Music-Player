@@ -18,6 +18,8 @@ public class Main extends JFrame {
 	private final JButton btnNewButton_2 = new JButton(">>|");
 	private final JButton btnNewButton_3 = new JButton("||");
 	private final JButton btnNewButton_4 = new JButton("Shuffle");
+	private JProgressBar progressBar = new JProgressBar();
+	private JTextPane textPane = new JTextPane();
 	
 	private boolean playing = false;
 	private boolean shuffle = false;
@@ -65,7 +67,7 @@ public class Main extends JFrame {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (pauseLocation <= 0)
-					playSong("./songs/01. Legend.mp3");
+					playSong("./songs/"+getRandomSong());
 				else
 					resumeSong();
 			}
@@ -86,25 +88,19 @@ public class Main extends JFrame {
 		btnNewButton_4.setBounds(56, 51, 112, 25);
 		contentPane.add(btnNewButton_4);
 		
-		JSpinner spinner = new JSpinner();
-		spinner.setModel(new SpinnerNumberModel(0, 0, 100, 1));
-		spinner.setBounds(319, 51, 42, 22);
-		contentPane.add(spinner);
 		
-		JTextPane textPane = new JTextPane();
 		textPane.setEditable(false);
 		textPane.setBounds(12, 96, 408, 90);
 		contentPane.add(textPane);
-		
-		JLabel lblVolume = new JLabel("Volume:");
-		lblVolume.setBounds(267, 51, 75, 25);
-		contentPane.add(lblVolume);
-		
-		JProgressBar progressBar = new JProgressBar();
-		progressBar.setStringPainted(true);
-		progressBar.setBounds(12, 199, 408, 25);
-		contentPane.add(progressBar);
 
+
+	}
+	
+	public String getRandomSong() {
+		File songs = new File("./songs/");
+		String[] songsList = songs.list();
+		return songsList[random(17)];
+		//return "";
 	}
 	
 	public void playSong(String path) {
@@ -114,6 +110,7 @@ public class Main extends JFrame {
 			songLength = FIS.available();
 			songTitle = path;
 			player = new Player(BIS);
+			textPane.setText(songTitle.replace("./songs/", "").replace(".mp3", ""));
 			//System.out.println("song length: "+songLength);
 		} catch (JavaLayerException | IOException e) {
 			e.printStackTrace();
@@ -159,6 +156,7 @@ public class Main extends JFrame {
 		if (player != null) {
 			try {
 				pauseLocation = FIS.available();
+				FIS.close();
 				player.close();
 				playing = false;
 				//System.out.println("paused at: "+pauseLocation);
@@ -166,6 +164,10 @@ public class Main extends JFrame {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public int random(int range) {
+		return (int)(java.lang.Math.random() * (range+1));
 	}
 	
 }
