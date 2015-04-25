@@ -2,9 +2,12 @@ import java.awt.*;
 
 import javax.swing.*;
 import javax.swing.border.*;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import javax.sound.*;
+
+import java.awt.event.*;
+import java.io.*;
+
+import javazoom.jl.decoder.JavaLayerException;
+import javazoom.jl.player.*;
 
 
 @SuppressWarnings({ "serial", "unused" })
@@ -18,6 +21,17 @@ public class Main extends JFrame {
 	
 	private boolean playing = false;
 	private boolean shuffle = false;
+	
+	private String songTitle;
+	private String songArtist;
+	private long songLength;
+
+	private FileInputStream FIS;
+	private BufferedInputStream BIS;
+	
+	public Player player;
+	
+	public long pauseLocation;
 
 	/**
 	 * Launch the application.
@@ -48,12 +62,25 @@ public class Main extends JFrame {
 		contentPane.setLayout(null);
 		
 		JButton btnNewButton = new JButton("Play");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (pauseLocation <= 0)
+					playSong("./songs/01. Legend.mp3");
+				else
+					resumeSong();
+			}
+		});
 		btnNewButton.setBounds(180, 13, 75, 25);
 		contentPane.add(btnNewButton);
 		btnNewButton_1.setBounds(93, 13, 75, 25);
 		contentPane.add(btnNewButton_1);
 		btnNewButton_2.setBounds(267, 13, 75, 25);
 		contentPane.add(btnNewButton_2);
+		btnNewButton_3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				pauseSong();
+			}
+		});
 		btnNewButton_3.setBounds(180, 51, 75, 25);
 		contentPane.add(btnNewButton_3);
 		btnNewButton_4.setBounds(56, 51, 112, 25);
@@ -79,4 +106,66 @@ public class Main extends JFrame {
 		contentPane.add(progressBar);
 
 	}
+	
+	public void playSong(String path) {
+		try {
+			FIS = new FileInputStream(path);
+			BIS = new BufferedInputStream(FIS);
+			songLength = FIS.available();
+			songTitle = path;
+			player = new Player(BIS);
+			//System.out.println("song length: "+songLength);
+		} catch (JavaLayerException | IOException e) {
+			e.printStackTrace();
+		}
+		new Thread() {
+			@Override
+			public void run() {
+				try {
+					player.play();
+					playing = true;
+				} catch (JavaLayerException e) {
+					e.printStackTrace();
+				}
+			}
+		}.start();
+	}
+	
+	public void resumeSong() {
+		try {
+			FIS = new FileInputStream(songTitle);
+			BIS = new BufferedInputStream(FIS);
+			player = new Player(BIS);
+			long lengthToSkip = songLength - pauseLocation;
+			FIS.skip(lengthToSkip);
+			//System.out.println("skipped:"+lengthToSkip);
+		} catch (JavaLayerException | IOException e) {
+			e.printStackTrace();
+		}
+		new Thread() {
+			@Override
+			public void run() {
+				try {
+					player.play();
+					playing = true;
+				} catch (JavaLayerException e) {
+					e.printStackTrace();
+				}
+			}
+		}.start();
+	}
+	
+	public void pauseSong() {
+		if (player != null) {
+			try {
+				pauseLocation = FIS.available();
+				player.close();
+				playing = false;
+				//System.out.println("paused at: "+pauseLocation);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
 }
