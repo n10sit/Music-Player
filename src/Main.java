@@ -17,7 +17,6 @@ public class Main extends JFrame {
 	private final JButton btnNewButton_1 = new JButton("|<<");
 	private final JButton btnNewButton_2 = new JButton(">>|");
 	private final JButton btnNewButton_3 = new JButton("||");
-	private final JButton btnNewButton_4 = new JButton("Shuffle");
 	private final JButton btnNewButton_5 = new JButton("Pick song");
 	private JProgressBar progressBar = new JProgressBar();
 	private static JTextPane textPane = new JTextPane();
@@ -52,6 +51,18 @@ public class Main extends JFrame {
 				}
 			}
 		});
+		/*test();
+		while(player != null) {
+			System.out.println("hey");
+			if (player.isComplete()) {
+				System.out.println("yo");
+				playSong("./songs/"+getRandomSong());
+			}
+		}*/
+	}
+	
+	public static void test() {
+		System.out.println("hi");
 	}
 
 	/**
@@ -87,8 +98,6 @@ public class Main extends JFrame {
 		});
 		btnNewButton_3.setBounds(180, 51, 75, 25);
 		contentPane.add(btnNewButton_3);
-		btnNewButton_4.setBounds(56, 51, 112, 25);
-		contentPane.add(btnNewButton_4);
 		
 		
 		textPane.setEditable(false);
@@ -116,10 +125,11 @@ public class Main extends JFrame {
 
 	}
 	
-	public String getRandomSong() {
+	public static String getRandomSong() {
 		File songs = new File("./songs/");
 		String[] songsList = songs.list();
-		return songsList[random(17)];
+		int length = songsList.length;
+		return songsList[random(length)];
 		//return "";
 	}
 	
@@ -140,7 +150,10 @@ public class Main extends JFrame {
 			public void run() {
 				try {
 					player.play();
-					playing = true;
+					if (player.isComplete()) {
+						//System.out.println("yo");
+						playSong("./songs/"+getRandomSong());
+					}
 				} catch (JavaLayerException e) {
 					e.printStackTrace();
 				}
@@ -165,6 +178,10 @@ public class Main extends JFrame {
 				try {
 					player.play();
 					playing = true;
+					if (player.isComplete()) {
+						//System.out.println("yo");
+						playSong("./songs/"+getRandomSong());
+					}
 				} catch (JavaLayerException e) {
 					e.printStackTrace();
 				}
@@ -187,7 +204,7 @@ public class Main extends JFrame {
 		}
 	}
 	
-	public int random(int range) {
+	public static int random(int range) {
 		return (int)(java.lang.Math.random() * (range+1));
 	}
 }

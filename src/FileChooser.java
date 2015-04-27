@@ -31,6 +31,7 @@ public class FileChooser extends JFrame implements ActionListener {
         
         fc = new JFileChooser();
         fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        fc.setCurrentDirectory(new File("./songs/"));
         
         openButton = new JButton("Open");
         openButton.addActionListener(this);
