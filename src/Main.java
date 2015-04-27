@@ -18,22 +18,24 @@ public class Main extends JFrame {
 	private final JButton btnNewButton_2 = new JButton(">>|");
 	private final JButton btnNewButton_3 = new JButton("||");
 	private final JButton btnNewButton_4 = new JButton("Shuffle");
+	private final JButton btnNewButton_5 = new JButton("Pick song");
 	private JProgressBar progressBar = new JProgressBar();
-	private JTextPane textPane = new JTextPane();
+	private static JTextPane textPane = new JTextPane();
 	
-	private boolean playing = false;
+	private static boolean playing = false;
 	private boolean shuffle = false;
 	
-	private String songTitle;
-	private String songArtist;
-	private long songLength;
+	private static String songTitle;
+	private static String songArtist;
+	private static long songLength;
 
-	private FileInputStream FIS;
-	private BufferedInputStream BIS;
+	private static FileInputStream FIS;
+	private static BufferedInputStream BIS;
 	
-	public Player player;
+	public static Player player;
 	
-	public long pauseLocation;
+	public static long pauseLocation;
+	
 
 	/**
 	 * Launch the application.
@@ -90,8 +92,26 @@ public class Main extends JFrame {
 		
 		
 		textPane.setEditable(false);
-		textPane.setBounds(12, 96, 408, 90);
+		textPane.setBounds(12, 96, 408, 144);
 		contentPane.add(textPane);
+		btnNewButton_5.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							FileChooser frame = new FileChooser();
+							frame.setVisible(true);
+							frame.setResizable(false);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				});
+			}
+		});
+		
+		btnNewButton_5.setBounds(267, 51, 97, 25);
+		contentPane.add(btnNewButton_5);
 
 
 	}
@@ -103,7 +123,7 @@ public class Main extends JFrame {
 		//return "";
 	}
 	
-	public void playSong(String path) {
+	public static void playSong(String path) {
 		try {
 			FIS = new FileInputStream(path);
 			BIS = new BufferedInputStream(FIS);
@@ -152,10 +172,11 @@ public class Main extends JFrame {
 		}.start();
 	}
 	
-	public void pauseSong() {
+	public static void pauseSong() {
 		if (player != null) {
 			try {
 				pauseLocation = FIS.available();
+				BIS.close();
 				FIS.close();
 				player.close();
 				playing = false;
@@ -169,5 +190,4 @@ public class Main extends JFrame {
 	public int random(int range) {
 		return (int)(java.lang.Math.random() * (range+1));
 	}
-	
 }
