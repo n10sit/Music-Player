@@ -35,6 +35,8 @@ public class Main extends JFrame {
 	
 	public static long pauseLocation;
 	
+	private static File lastSong;
+	
 
 	/**
 	 * Launch the application.
@@ -79,16 +81,36 @@ public class Main extends JFrame {
 		JButton btnNewButton = new JButton("Play");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if (pauseLocation <= 0)
-					playSong("./songs/"+getRandomSong());
-				else
-					resumeSong();
+				if (!playing) {
+					String song = "./songs/"+getRandomSong();
+					if (pauseLocation <= 0)
+						playSong(song);
+					else
+						resumeSong();
+					playing = true;
+				} else {
+					System.out.println("A song is already playing!");
+				}
 			}
 		});
 		btnNewButton.setBounds(180, 13, 75, 25);
 		contentPane.add(btnNewButton);
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (lastSong != null) {
+					pauseSong();
+					playSong(lastSong.getPath());
+				}
+			}
+		});
 		btnNewButton_1.setBounds(93, 13, 75, 25);
 		contentPane.add(btnNewButton_1);
+		btnNewButton_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				pauseSong();
+				playSong("./songs/"+getRandomSong());
+			}
+		});
 		btnNewButton_2.setBounds(267, 13, 75, 25);
 		contentPane.add(btnNewButton_2);
 		btnNewButton_3.addActionListener(new ActionListener() {
@@ -139,6 +161,7 @@ public class Main extends JFrame {
 			BIS = new BufferedInputStream(FIS);
 			songLength = FIS.available();
 			songTitle = path;
+			lastSong = new File(path);
 			player = new Player(BIS);
 			textPane.setText(songTitle.replace("./songs/", "").replace(".mp3", ""));
 			//System.out.println("song length: "+songLength);
@@ -150,8 +173,9 @@ public class Main extends JFrame {
 			public void run() {
 				try {
 					player.play();
+					//playing = true;
 					if (player.isComplete()) {
-						//System.out.println("yo");
+						lastSong = new File(path);
 						playSong("./songs/"+getRandomSong());
 					}
 				} catch (JavaLayerException e) {
@@ -177,7 +201,7 @@ public class Main extends JFrame {
 			public void run() {
 				try {
 					player.play();
-					playing = true;
+					//playing = true;
 					if (player.isComplete()) {
 						//System.out.println("yo");
 						playSong("./songs/"+getRandomSong());
